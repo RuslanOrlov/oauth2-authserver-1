@@ -63,12 +63,12 @@ public class SecurityConfig {
                 .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
                 .with(authorizationServerConfigurer, (authorizationServer) -> {
                     authorizationServer
-                            //.oidc((oidc) -> oidc
-                            //        .logoutEndpoint(Customizer.withDefaults()));
-                            .oidc((Customizer.withDefaults()));
+                            .oidc(Customizer.withDefaults());
                 })
                 .authorizeHttpRequests((authorize) ->
                         authorize.anyRequest().authenticated())
+                // Redirect to the login page when not authenticated from the
+                // authorization endpoint
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
                                 new LoginUrlAuthenticationEntryPoint("/login"),
@@ -85,10 +85,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                //.requestMatchers("/oauth2/check-consent").permitAll()
                                 .anyRequest().authenticated())
-                .oauth2ResourceServer((oauth2) -> oauth2 // включение JWT-аутентификациидля для того, чтобы сервер авторизации
-                        .jwt(Customizer.withDefaults())) // мог обрабатывать запросы с токеном JWT в заголовоке Authorization
+                // Включение JWT-аутентификациидля для того, чтобы сервер авторизации
+                // мог обрабатывать запросы с токеном JWT в заголовке Authorization
+                .oauth2ResourceServer((oauth2) -> oauth2
+                        .jwt(Customizer.withDefaults()))
                 .formLogin(Customizer.withDefaults())
                 /*.logout((logout) -> logout
                         .logoutUrl("/oath2/logout")
