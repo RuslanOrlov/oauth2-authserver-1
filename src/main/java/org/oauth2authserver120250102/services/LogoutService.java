@@ -31,6 +31,7 @@ public class LogoutService {
     ) {
         log.info("==================================================");
         log.info("Выход из системы (сервер авторизации):");
+        // Получение идентификатора зарегистрированного клиента
         String clientId = Objects.requireNonNull(
                 registeredClientRepository.findByClientId("my-client-id")).getId();
 
